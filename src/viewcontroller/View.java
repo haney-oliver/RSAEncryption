@@ -29,7 +29,7 @@ public class View {
 
         // Frame
         frame = new JFrame("RSA Encryption");
-        frame.setSize(new Dimension(800, 400));
+        frame.setSize(new Dimension(400, 400));
         frame.setLayout(new BorderLayout());
         frame.add(messageInputTextField, BorderLayout.CENTER);
         frame.add(encryptMessageButton, BorderLayout.WEST);
@@ -39,6 +39,8 @@ public class View {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
+
+    // Getters
     public JFrame getFrame() {
         return frame;
     }

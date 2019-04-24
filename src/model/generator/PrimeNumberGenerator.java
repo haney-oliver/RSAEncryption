@@ -7,6 +7,6 @@ public abstract class PrimeNumberGenerator {
     // Generate and validate prime number
     // If a non-prime is generated, recursively generates until prime is generated
     public static BigInteger generatePrime() {
-        return BigInteger.probablePrime(6, new Random());
+        return BigInteger.probablePrime(10, new Random());
     }
 }

@@ -9,6 +9,7 @@ public class Controller {
     private RsaEncryption rsaEncryption;
     private View view;
 
+    // Instantiate view by passing action listener to listen for button presses
     public Controller(RsaEncryption rsaEncryption) {
         this.rsaEncryption = rsaEncryption;
         this.view = new View(new ActionListener() {
