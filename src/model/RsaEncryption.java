@@ -7,8 +7,9 @@ import java.math.BigInteger;
 
 public class RsaEncryption {
     private final RsaEncryptionKeyGenerator encryptionKeyGenerator;
-    private final Point publicKey;
-    private final Point privateKey;
+    private final BigInteger publicKey;
+    private final BigInteger privateKey;
+    private final BigInteger n;
     private String message;
     private String[] asciiBlocks;
     private String[] encryptedBlocks;
@@ -20,12 +21,13 @@ public class RsaEncryption {
         encryptionKeyGenerator = new RsaEncryptionKeyGenerator();
         publicKey = encryptionKeyGenerator.getPublicKey();
         privateKey = encryptionKeyGenerator.getPrivateKey();
+        n = encryptionKeyGenerator.getN();
     }
 
     // encrypts provided message, persists encrypted blocks array and encrypted message
     public String encryptMessage() {
         String[] blocks = new String[255];
-        int numberOfDigits = Integer.valueOf(publicKey.x).toString().length();
+        int numberOfDigits = Integer.valueOf(n.intValue()).toString().length();
         int blockSize = message.length() / numberOfDigits;
         int j = 0;
         for (int i = 0; i <= numberOfDigits; i++) {
@@ -81,7 +83,8 @@ public class RsaEncryption {
         String encryptedBlock = "";
         String[] delimitedSubBlocks = asciiBlock.split(",");
         for(int i = 0; i < delimitedSubBlocks.length; i++) {
-            encryptedBlock += ((new BigInteger(delimitedSubBlocks[i]).pow(publicKey.y)).mod(new BigInteger(Integer.toString(publicKey.x)))).toString() + ",";
+//            pow(publicKey.intValue())).mod(new BigInteger(Integer.toString(n.intValue())))).toString() + ",";
+            encryptedBlock += (new BigInteger(delimitedSubBlocks[i]).modPow(publicKey, n).toString() + ",");
         }
         return encryptedBlock;
     }
@@ -92,7 +95,8 @@ public class RsaEncryption {
         String decryptedBlock = "";
         String[] delimitedSubBlocks = encryptedBlock.split(",");
         for (int i = 0; i < delimitedSubBlocks.length; i++) {
-            decryptedBlock += new BigInteger(delimitedSubBlocks[i]).pow(privateKey.y).mod(new BigInteger(Integer.toString(privateKey.x))) + ",";
+            // pow(privateKey.intValue()).mod(new BigInteger(Integer.toString(n.intValue()))) + ","
+            decryptedBlock += new BigInteger(delimitedSubBlocks[i]).modPow(privateKey, n).toString() + ",";
         }
         return decryptedBlock;
     }
