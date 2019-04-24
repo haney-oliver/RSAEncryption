@@ -10,6 +10,7 @@ public class RsaEncryption {
     private final Point publicKey;
     private final Point privateKey;
     private String message;
+    private String[] asciiBlocks;
     private String[] encryptedBlocks;
     private String[] decryptedBlocks;
     private String encryptedMessage;
@@ -49,7 +50,7 @@ public class RsaEncryption {
         while(blocks[numberOfBlocks] != null) {
             numberOfBlocks++;
         }
-        String[] asciiBlocks = new String[numberOfBlocks];
+        asciiBlocks = new String[numberOfBlocks];
         for (int i = 0; i < asciiBlocks.length; i++) {
             asciiBlocks[i] = convertToAscii(blocks[i]);
         }
@@ -75,7 +76,7 @@ public class RsaEncryption {
         String decryptedBlock = "";
         String[] delimitedSubBlocks = encryptedBlock.split(",");
         for (int i = 0; i < delimitedSubBlocks.length; i++) {
-            decryptedBlock += ((new BigInteger(delimitedSubBlocks[i]).pow(privateKey.x)).mod(new BigInteger(Integer.toString(privateKey.x)))).toString() + ",";
+            decryptedBlock += new BigInteger(delimitedSubBlocks[i]).pow(privateKey.y).mod(new BigInteger(Integer.toString(privateKey.x))) + ",";
         }
         return decryptedBlock;
     }

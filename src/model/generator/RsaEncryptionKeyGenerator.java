@@ -16,15 +16,20 @@ public class RsaEncryptionKeyGenerator {
     private BigInteger d = generateD();    // private exponent or decryption exponent
 
     public RsaEncryptionKeyGenerator() {
-        while (d == null) {
+        while(generateD() == null) {
             d = generateD();
         }
+        System.out.println(p);
+        System.out.println(q);
+        System.out.println(phi);
+        System.out.println(e);
+        System.out.println(d);
     }
 
     // Generate the encryption exponent
     private BigInteger generateE() {
         BigInteger e = generatePrime();
-        if (e.compareTo(ONE) == -1 || e.compareTo(phi) == 1 || e.compareTo(ONE) == 0 || e.compareTo(phi) == 0) {
+        if (e.gcd(phi) != ONE && (e.compareTo(ONE) == -1 || e.compareTo(phi) == 1 || e.compareTo(ONE) == 0 || e.compareTo(phi) == 0)) {
             return generateE();
         }
         return e;
@@ -32,7 +37,11 @@ public class RsaEncryptionKeyGenerator {
 
     //Generate the decryption exponent
     private BigInteger generateD() {
-        return e.modInverse(phi);
+        BigInteger d = e.modInverse(phi);
+        if((((e.multiply(d)).subtract(ONE)).mod(phi)).equals(ZERO)) {
+            return d;
+        }
+        return null;
     }
 
     //Getters for keys
