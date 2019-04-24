@@ -73,15 +73,19 @@ public class RsaEncryption {
 
     private String decryptBlock(String encryptedBlock) {
         String decryptedBlock = "";
-        String delimitedBlock = encryptedBlock.replaceAll(",", "");
-        decryptedBlock += (new BigInteger(delimitedBlock).pow(privateKey.x)).mod(new BigInteger(Integer.toString(privateKey.x))).toString();
+        String[] delimitedSubBlocks = encryptedBlock.split(",");
+        for (int i = 0; i < delimitedSubBlocks.length; i++) {
+            decryptedBlock += ((new BigInteger(delimitedSubBlocks[i]).pow(privateKey.x)).mod(new BigInteger(Integer.toString(privateKey.x)))).toString() + ",";
+        }
         return decryptedBlock;
     }
 
     private String encryptBlock(String asciiBlock) {
         String encryptedBlock = "";
-        String delimitedBlock = asciiBlock.replaceAll(",", "");
-        encryptedBlock += (new BigInteger(delimitedBlock).pow(publicKey.y)).mod(new BigInteger(Integer.toString(publicKey.x))).toString() + ",";
+        String[] delimitedSubBlocks = asciiBlock.split(",");
+        for(int i = 0; i < delimitedSubBlocks.length; i++) {
+            encryptedBlock += ((new BigInteger(delimitedSubBlocks[i]).pow(publicKey.y)).mod(new BigInteger(Integer.toString(publicKey.x)))).toString() + ",";
+        }
         return encryptedBlock;
     }
 
@@ -95,8 +99,9 @@ public class RsaEncryption {
 
     private String convertFromAscii(String asciiBlock) {
         String message = "";
-        for (int i = 0; i < asciiBlock.length(); i++) {
-            message += (char)Integer.parseInt(asciiBlock);
+        String[] delimitedSubBlocks = asciiBlock.split(",");
+        for (int i = 0; i < delimitedSubBlocks.length; i++) {
+            message += (char)Integer.parseInt(delimitedSubBlocks[i]);
         }
         return message;
     }
